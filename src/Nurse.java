@@ -10,7 +10,7 @@ public class Nurse extends Villager
     public void save(String save, int n, int i, ArrayList <String> alive,ArrayList<String> dead)
     {
         Scanner c = new Scanner(System.in);
-        while(n=0)
+        while(n==0)
         {
             System.out.println("Who would you like to save?");
             save = c.nextLine();
@@ -25,7 +25,7 @@ public class Nurse extends Villager
             }
             for(i = 0; i < alive.size(); i++) 
             {
-                if(save.equals(alive(i)))
+                if(save.equals(alive.get(i)))
                 {
                     n++;
                 }

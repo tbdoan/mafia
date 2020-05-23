@@ -6,10 +6,11 @@ public class Mafia extends Player
     {
         super(name, status);
     }
+    @SuppressWarnings("resource")
     public void murder(String kill, int n, int i, ArrayList <String> alive,ArrayList<String> dead)
     {
         Scanner c = new Scanner(System.in);
-        while(n=0)
+        while(n==0)
         {
             System.out.println("Who would you like to kill?");
             kill = c.nextLine();

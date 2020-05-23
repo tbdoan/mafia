@@ -31,7 +31,7 @@ public class Player
 	public String voteDaytime(String vote, int n, int i, ArrayList<String> alive)
 	{
 		Scanner c = new Scanner(System.in);
-		while(k=0)
+		while(n==0)
 		{
 			System.out.println("Who do you vote to kill?");
 			vote = c.nextLine();
@@ -39,7 +39,7 @@ public class Player
 			{
 				if(vote.equals(alive.get(i)))
 				{
-					k++;
+					n++;
 				}
             }
             System.out.println("Error, please try again.");
