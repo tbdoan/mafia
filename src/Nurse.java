@@ -14,7 +14,7 @@ public class Nurse extends Villager
         {
             System.out.println("Who would you like to save?");
             save = c.nextLine();
-            for(i = 0; i < alive.size(); i++)
+            for(i = 0; i < dead.size(); i++)
             {
                 if(save.equals(dead.get(i)))
                 {
@@ -22,15 +22,15 @@ public class Nurse extends Villager
                     dead.remove(i);
                     n++;
                 }
+            }
+            for(i = 0; i < alive.size(); i++) 
+            {
                 if(save.equals(alive(i)))
                 {
                     n++;
                 }
-                if(!(save.equals(dead.get(i))||save.equals(alive.get(i))))
-                {
-                    System.out.println("Error made, please try again.");
-                }
             }
+            System.out.println("Error made, please try again.");
         }
     }
 }
