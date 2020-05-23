@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 public class Player 
 {
 	protected String name;
@@ -27,26 +28,22 @@ public class Player
 		this.status = status;
 	}
 	@SuppressWarnings("resource")
-	public String voteDaytime(String [] player, String vote, int i, int k)
+	public String voteDaytime(String vote, int n, int i, ArrayList<String> alive)
 	{
 		Scanner c = new Scanner(System.in);
-		k = 0;
-		while(k<1)
+		while(k=0)
 		{
 			System.out.println("Who do you vote to kill?");
 			vote = c.nextLine();
-			for(i = 0; i<player.length; i++)
+			for(i = 0; i<alive.size(); i++)
 			{
-				if(vote.equals(player[i]))
+				if(vote.equals(alive.get(i)))
 				{
 					k++;
 				}
-				else
-				{
-					System.out.println("Sorry, the name typed is invalid. Please try again");
-				}
-			}
-		}
-		return vote;
+            }
+            System.out.println("Error, please try again.");
+        }
+        return vote;
 	}
 }
