@@ -1,4 +1,5 @@
-import java.util.Scanner;
+import java.util.*;
+
 public class Player 
 {
 	protected String name;
@@ -26,27 +27,23 @@ public class Player
 	{
 		this.status = status;
 	}
+
 	@SuppressWarnings("resource")
-	public String voteDaytime(String [] player, String vote, int i, int k)
+	public String voteDaytime(ArrayList<Player> players)
 	{
 		Scanner c = new Scanner(System.in);
-		k = 0;
-		while(k<1)
-		{
+		while(true) {
 			System.out.println("Who do you vote to kill?");
-			vote = c.nextLine();
-			for(i = 0; i<player.length; i++)
-			{
-				if(vote.equals(player[i]))
-				{
-					k++;
-				}
-				else
-				{
-					System.out.println("Sorry, the name typed is invalid. Please try again");
+			String vote = c.nextLine();
+			for(int i = 0; i<players.size(); i++) {
+				//if the player exists and is alive
+				if(vote.equals(players.get(i).getName())
+						&& players.get(i).getStatus()) {
+					return vote;
 				}
 			}
+			System.out.println("Player doesn't exist or is already dead. Try" +
+					" again");
 		}
-		return vote;
 	}
 }
