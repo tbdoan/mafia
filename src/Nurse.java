@@ -23,6 +23,14 @@ public class Nurse extends Villager
                     dead.remove(i);
                     n++;
                 }
+                if(save.equals(alive(i)))
+                {
+                    n++;
+                }
+                if(!(save.equals(dead.get(i))||save.equals(alive.get(i))))
+                {
+                    System.out.println("Error made, please try again.");
+                }
             }
         }
     }
