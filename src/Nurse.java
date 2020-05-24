@@ -1,4 +1,3 @@
-package Mafia;
 import java.util.Scanner;
 import java.util.ArrayList;
 public class Nurse extends Villager
