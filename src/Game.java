@@ -1,11 +1,15 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import static java.util.Collections.shuffle;
 
 public class Game {
     private static ArrayList<Player> players = new ArrayList<>();
     private static ArrayList<Player> spectators = new ArrayList<>();
+
+    private static int mafiaIndex;
+    private static int nurseIndex;
+    private static int detectiveIndex;
+
+
 
     public Game() {
         setUp();
@@ -126,26 +130,38 @@ public class Game {
      * @return - 1 if citizens win, 2 if mafia win, 3 if game in progress
      */
     private int gameState() {
-        boolean mafia = false;
-        boolean citizens = false;
-        for(Player player : players) {
-            if(player instanceof Citizen) {
-                citizens = true;
-            } else if(player instanceof Mafia){
-                mafia = true;
-            }
-        }
-        if(mafia && citizens) {
-            return 3;
-        } else()
+
 
     }
 
-    //TODO: Implement roles. Right now, everyone is a generic player
+    /**
+     * uses list of names to randomly generate roles as well as set
+     * partition indices
+     *
+     * @param names - list of player names
+     */
     private static void assignRoles(ArrayList<String> names) {
         int numMafia = (int) Math.floor(names.size() / 3);
-        int numNurses = (int) Math.floor(2 * numMafia / 3);
-        int numDetectives = numNurses;
+        int numNurse = (int) Math.floor(names.size() / 4);
+        int numDetective = numNurse;
+
+        mafiaIndex = numMafia;
+        nurseIndex = mafiaIndex + numNurse;
+        detectiveIndex = nurseIndex + numDetective;
+
+        shuffle(names);
+        for(int i = 0; i < names.size(); i++) {
+            if(i < mafiaIndex) {
+                players.add(new Mafia(names.get(i),true));
+            } else if(i < nurseIndex) {
+                players.add(new Nurse(names.get(i), true));
+            } else if(i < detectiveIndex){
+                players.add(new Detective(names.get(i), true));
+            } else {
+                players.add(new Citizen(names.get(i), true));
+            }
+        }
+
 
     }
 }

@@ -28,22 +28,29 @@ public class Player
 		this.status = status;
 	}
 
+	/**
+	 * prompts for a player and returns it if valid
+	 *
+	 * @param players - list of players
+	 * @param message - custom message
+	 * @return
+	 */
 	@SuppressWarnings("resource")
-	public String vote(ArrayList<Player> players)
+	public Player vote(ArrayList<Player> players, String message)
 	{
 		Scanner c = new Scanner(System.in);
 		while(true) {
-			System.out.println("Who do you vote to kill?");
+			System.out.println(message);
 			String vote = c.nextLine();
 			for(int i = 0; i<players.size(); i++) {
+				Player currPlayer = players.get(i);
 				//if the player exists and is alive
-				if(vote.equals(players.get(i).getName())
-						&& players.get(i).getStatus()) {
-					return vote;
+				if(vote.equals(currPlayer.getName())
+						&& currPlayer.getStatus()) {
+					return currPlayer;
 				}
 			}
-			System.out.println("Player doesn't exist or is already dead. Try" +
-					" again");
+			System.out.println("Invalid Name");
 		}
 	}
 }
