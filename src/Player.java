@@ -29,7 +29,7 @@ public class Player
 	}
 
 	@SuppressWarnings("resource")
-	public String voteDaytime(ArrayList<Player> players)
+	public String vote(ArrayList<Player> players)
 	{
 		Scanner c = new Scanner(System.in);
 		while(true) {
