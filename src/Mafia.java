@@ -7,8 +7,4 @@ public class Mafia extends Player
         super(name, status);
     }
 
-    @Override
-    public Player vote(ArrayList<Player> players, String message) {
-        return super.vote(players, "Who do you want to kill?");
-    }
 }

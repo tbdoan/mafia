@@ -9,6 +9,8 @@ public class Game {
     private static int nurseIndex;
     private static int detectiveIndex;
 
+    private static String PLAYER_MESSAGE = "Who do you want to mob?";
+
 
 
     public Game() {
@@ -19,37 +21,30 @@ public class Game {
      * game flow
      */
     public void run() {
+        while(gameState() == 3) {
+            //mafia chooses a person to kill
+            Player target = genericVote(0, mafiaIndex,
+                    "Who would you like to murder?");
 
-        //mafia chooses this person to kill
-        String target = voteToMurder();
+            //nurse chooses a person to save
+            Player patient = genericVote(mafiaIndex, nurseIndex,
+                    "Who would you like to save?");
 
-        //person dies and is moved to spectators
-        moveToSpectators(target);
+            //detective chooses a person to investigate
+            Player suspect = genericVote(nurseIndex, detectiveIndex,
+                    "Who would you like to investigate?");
 
-        //skip a few stages forward
+            //skip a few stages forward
 
-        //villagers chooses and kills a person
-        String mobbed = voteToMob();
-        moveToSpectators(mobbed);
-    }
-
-    /**
-     * Counts votes from all Players and determines person to kill
-     *
-     * @return - name of loser
-     */
-    public String voteToMob() {
-        Map<String,Integer> votes =
-                new HashMap<>();
-        for (Player player : players) {
-            String name = player.vote(players);
-            if (votes.keySet().contains(name))
-                votes.put(name, votes.get(name) + 1);
-            else
-                votes.put(name, 1);
+            //citizens choose a person to mob
+            Player mobbed = genericVote(0, players.size(),
+                    "Who would you like to mob?");
         }
-
-        return countVotes(votes);
+        if(gameState() == 1) {
+            System.out.println("Citizens Win!");
+        } else {
+            System.out.println("Mafia Win!");
+        }
     }
 
     /**
@@ -57,21 +52,24 @@ public class Game {
      *
      * @return - name of loser
      */
-    public String voteToMurder() {
-        Map<String,Integer> votes =
+    public Player genericVote(int start, int end, String message) {
+        Map<Player,Integer> votes =
                 new HashMap<>();
-        for (Player player : players) {
-            if(player instanceof Mafia) {
-                String name = player.vote(players);
-                if (votes.keySet().contains(name))
-                    votes.put(name, votes.get(name) + 1);
-                else
-                    votes.put(name, 1);
+        for (int i = start; i < end; i++) {
+            Player vote = players.get(i).vote(players, message);
+            String voteName = vote.getName();
+            if (votes.keySet().contains(voteName)) {
+                votes.put(vote, votes.get(voteName) + 1);
+            }
+            else {
+                votes.put(vote, 1);
             }
         }
         return countVotes(votes);
     }
 
+
+    //TODO: Disallow duplicate names
     /**
      * Gets all the names of players from command line input and creates
      * Player objects from the names
@@ -84,63 +82,13 @@ public class Game {
             String s = in.nextLine();
             if(s.compareTo("Done") == 0 || s.compareTo("") == 0) {
                 break;
-            } else {
+            } else if(names.contains(s)) {
+                System.out.println("Name already taken");
+            } else{
                 names.add(s);
             }
         }
-        for (int i = 0; i < names.size(); i++) {
-            players.add(new Player(names.get(i), true));
-        }
-    }
 
-    /**
-     * helper method to count who has most votes
-     *
-     * @param votes - Map of votes
-     * @return - preson with most votes
-     */
-    private String countVotes(Map<String, Integer> votes) {
-        // Traverse through map to find the candidate with maximum votes.
-        int maxValueInMap = 0;
-        String loser = null;
-        for (Map.Entry<String,Integer> entry : votes.entrySet()) {
-            String key  = entry.getKey();
-            Integer val = entry.getValue();
-            if (val > maxValueInMap) {
-                maxValueInMap = val;
-                loser = key;
-            }
-        }
-        return loser;
-    }
-
-    private void moveToSpectators(String target) {
-        for (int i = 0; i < players.size(); i++) {
-            if(players.get(i).getName().equals(target)) {
-                players.remove(i);
-                spectators.add(new Player(target, false));
-                return;
-            }
-        }
-    }
-
-    /**
-     * state of the game
-     *
-     * @return - 1 if citizens win, 2 if mafia win, 3 if game in progress
-     */
-    private int gameState() {
-
-
-    }
-
-    /**
-     * uses list of names to randomly generate roles as well as set
-     * partition indices
-     *
-     * @param names - list of player names
-     */
-    private static void assignRoles(ArrayList<String> names) {
         int numMafia = (int) Math.floor(names.size() / 3);
         int numNurse = (int) Math.floor(names.size() / 4);
         int numDetective = numNurse;
@@ -161,7 +109,68 @@ public class Game {
                 players.add(new Citizen(names.get(i), true));
             }
         }
-
-
     }
+
+    /**
+     * helper method to count who has most votes
+     *
+     * @param votes - Map of votes
+     * @return - preson with most votes
+     */
+    private Player countVotes(Map<Player, Integer> votes) {
+        // Traverse through map to find the candidate with maximum votes.
+        int maxValueInMap = 0;
+        Player loser = null;
+        for (Map.Entry<Player,Integer> entry : votes.entrySet()) {
+            Player key  = entry.getKey();
+            Integer val = entry.getValue();
+            if (val > maxValueInMap) {
+                maxValueInMap = val;
+                loser = key;
+            }
+        }
+        return loser;
+    }
+
+    private void moveToSpectators(String target) {
+        for (int i = 0; i < players.size(); i++) {
+            if(players.get(i).getName().equals(target)) {
+                players.remove(i);
+                spectators.add(new Player(target, false));
+                return;
+            }
+        }
+    }
+
+
+    /**
+     * state of the game
+     *
+     * @return - 1 if citizens win, 2 if mafia win, 3 if game in progress
+     */
+    private int gameState() {
+        boolean mafiaAlive = false;
+        boolean citizenAlive = false;
+        for (int i = 0; i < mafiaIndex; i++) {
+            if(players.get(i).getStatus()) {
+                mafiaAlive = true;
+                break;
+            }
+        }
+        for (int i = mafiaIndex; i < players.size(); i++) {
+            if(players.get(i).getStatus()) {
+                citizenAlive = true;
+                break;
+            }
+        }
+
+        if(mafiaAlive && citizenAlive) {
+            return 3;
+        } else if (!citizenAlive) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
 }

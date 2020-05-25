@@ -35,7 +35,6 @@ public class Player
 	 * @param message - custom message
 	 * @return
 	 */
-	@SuppressWarnings("resource")
 	public Player vote(ArrayList<Player> players, String message)
 	{
 		Scanner c = new Scanner(System.in);
@@ -51,6 +50,14 @@ public class Player
 				}
 			}
 			System.out.println("Invalid Name");
+		}
+	}
+
+	public boolean equals(Player player) {
+		if(getName().equals(player.getName())) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
