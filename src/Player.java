@@ -47,7 +47,7 @@ public class Player
 				if(vote.equals(currPlayer.getName())
 						&& currPlayer.getStatus()) {
 					return currPlayer;
-				} else if(vote.equals("")) {
+				} else if(vote.length()==0) {
 					return null;
 				}
 			}
