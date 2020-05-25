@@ -87,7 +87,7 @@ public class Game {
     }
 
     /**
-     * Counts votes from all Players and determines person to kill
+     * Counts votes from all Players and determines person   to kill
      *
      * @return - name of loser
      */
@@ -207,7 +207,7 @@ public class Game {
                 break;
             }
         }
-        for (int i = mafiaIndex; i < players.size(); i++) {
+        for (int i = mafiaIndex; i < (players.size()); i++) {
             if(players.get(i).getStatus()) {
                 citizenAlive = true;
                 break;
