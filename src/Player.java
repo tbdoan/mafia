@@ -56,7 +56,9 @@ public class Player
 	}
 
 	public boolean equals(Player player) {
-		if(getName().equals(player.getName())) {
+		if(player == null) {
+			return false;
+		} else if(getName().equals(player.getName())) {
 			return true;
 		} else {
 			return false;

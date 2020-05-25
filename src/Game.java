@@ -54,9 +54,12 @@ public class Game {
                 System.out.println(suspect.getName() + " is a " + suspect.getClass().getSimpleName());
             }
 
+            if(target == null) {
+                System.out.println("The mafia has did not kill last night");
+            }
             if(target.equals(patient)) {
                 System.out.println("The mafia tried to kill " + target.getName()
-                        + "but they were saved.");
+                        + " but they were saved.");
             } else {
                 target.setStatus(false);
                 System.out.println(target.getName() + " has been killed in " +
@@ -67,6 +70,10 @@ public class Game {
             //citizens choose a person to mob
             Player mobbed = genericVote(0, players.size(),
                     "who would you like to mob?");
+            if(mobbed == null) {
+                System.out.println("The citizens have decided they are not " +
+                        "angry");
+            }
             System.out.println("The citizens have decided to kill " + mobbed.getName());
 
         }
@@ -89,11 +96,13 @@ public class Game {
             if(players.get(i).getStatus()) {
                 Player vote = players.get(i).vote(players,
                         players.get(i).getName() + ", " + message);
-                String voteName = vote.getName();
-                if (votes.keySet().contains(voteName)) {
-                    votes.put(vote, votes.get(voteName) + 1);
-                } else {
-                    votes.put(vote, 1);
+                if(vote != null) {
+                    String voteName = vote.getName();
+                    if (votes.keySet().contains(voteName)) {
+                        votes.put(vote, votes.get(voteName) + 1);
+                    } else {
+                        votes.put(vote, 1);
+                    }
                 }
             }
         }
