@@ -11,8 +11,6 @@ public class Game {
 
     private static String PLAYER_MESSAGE = "Who do you want to mob?";
 
-
-
     public Game() {
         setUp();
     }
@@ -23,22 +21,54 @@ public class Game {
     public void run() {
         while(gameState() == 3) {
             //mafia chooses a person to kill
+            printNames(0, mafiaIndex, "Your mafia are: ");
             Player target = genericVote(0, mafiaIndex,
-                    "Who would you like to murder?");
+                    "who would you like to murder?");
+            if(target == null) {
+                System.out.println(
+                        "The mafia have chosen not to kill tonight.");
+            } else {
+                System.out.println("The mafia have chosen to kill " + target.getName());
+            }
 
             //nurse chooses a person to save
+            printNames(mafiaIndex, nurseIndex, "Your nurses are: ");
             Player patient = genericVote(mafiaIndex, nurseIndex,
-                    "Who would you like to save?");
+                    "who would you like to save?");
+            if(patient == null) {
+                System.out.println(
+                        "The nurses have chosen not to save anyone tonight.");
+            } else {
+                System.out.println("The nurses have chosen to save " + patient.getName());
+            }
 
             //detective chooses a person to investigate
+            printNames(nurseIndex, detectiveIndex, "Your detectives are: ");
             Player suspect = genericVote(nurseIndex, detectiveIndex,
-                    "Who would you like to investigate?");
+                    "who would you like to investigate?");
+            if(suspect == null) {
+                System.out.println(
+                        "The detectives are too busy pigging on donuts " +
+                                "tonight");
+            } else {
+                System.out.println(suspect.getName() + " is a " + suspect.getClass().getSimpleName());
+            }
 
-            //skip a few stages forward
+            if(target.equals(patient)) {
+                System.out.println("The mafia tried to kill " + target.getName()
+                        + "but they were saved.");
+            } else {
+                target.setStatus(false);
+                System.out.println(target.getName() + " has been killed in " +
+                        "the night");
+            }
 
+            System.out.println("Citizens, here is your chance to strike back");
             //citizens choose a person to mob
             Player mobbed = genericVote(0, players.size(),
-                    "Who would you like to mob?");
+                    "who would you like to mob?");
+            System.out.println("The citizens have decided to kill " + mobbed.getName());
+
         }
         if(gameState() == 1) {
             System.out.println("Citizens Win!");
@@ -56,20 +86,30 @@ public class Game {
         Map<Player,Integer> votes =
                 new HashMap<>();
         for (int i = start; i < end; i++) {
-            Player vote = players.get(i).vote(players, message);
-            String voteName = vote.getName();
-            if (votes.keySet().contains(voteName)) {
-                votes.put(vote, votes.get(voteName) + 1);
-            }
-            else {
-                votes.put(vote, 1);
+            if(players.get(i).getStatus()) {
+                Player vote = players.get(i).vote(players,
+                        players.get(i).getName() + ", " + message);
+                String voteName = vote.getName();
+                if (votes.keySet().contains(voteName)) {
+                    votes.put(vote, votes.get(voteName) + 1);
+                } else {
+                    votes.put(vote, 1);
+                }
             }
         }
         return countVotes(votes);
     }
 
+    public void printNames(int start, int end, String message) {
+        System.out.println(message);
+        for (int i = start; i < end; i++) {
+            if(players.get(i).getStatus()) {
+                System.out.print(players.get(i).getName() + " ");
+            }
+        }
+        System.out.println();
+    }
 
-    //TODO: Disallow duplicate names
     /**
      * Gets all the names of players from command line input and creates
      * Player objects from the names
@@ -124,7 +164,7 @@ public class Game {
         for (Map.Entry<Player,Integer> entry : votes.entrySet()) {
             Player key  = entry.getKey();
             Integer val = entry.getValue();
-            if (val > maxValueInMap) {
+            if (val >= maxValueInMap) {
                 maxValueInMap = val;
                 loser = key;
             }

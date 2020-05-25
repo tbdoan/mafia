@@ -47,6 +47,8 @@ public class Player
 				if(vote.equals(currPlayer.getName())
 						&& currPlayer.getStatus()) {
 					return currPlayer;
+				} else if(vote.equals("")) {
+					return null;
 				}
 			}
 			System.out.println("Invalid Name");
