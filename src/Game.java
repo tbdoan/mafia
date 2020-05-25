@@ -19,7 +19,8 @@ public class Game {
      * game flow
      */
     public void run() {
-        while(gameState() == 3) {
+        int gameState = 3;
+        while(gameState == 3) {
             //mafia chooses a person to kill
             printNames(0, mafiaIndex, "Your mafia are: ");
             Player target = genericVote(0, mafiaIndex,
@@ -66,6 +67,11 @@ public class Game {
                         "the night");
             }
 
+            gameState = gameState();
+            if(gameState != 3) {
+                break;
+            }
+
             System.out.println("Citizens, here is your chance to strike back");
             //citizens choose a person to mob
             Player mobbed = genericVote(0, players.size(),
@@ -73,14 +79,11 @@ public class Game {
             if(mobbed == null) {
                 System.out.println("The citizens have decided they are not " +
                         "angry");
+            } else {
+                mobbed.setStatus(false);
+                System.out.println("The citizens have decided to kill " + mobbed.getName());
             }
-            System.out.println("The citizens have decided to kill " + mobbed.getName());
-
-        }
-        if(gameState() == 1) {
-            System.out.println("Citizens Win!");
-        } else {
-            System.out.println("Mafia Win!");
+            gameState = gameState();
         }
     }
 
@@ -191,7 +194,6 @@ public class Game {
         }
     }
 
-
     /**
      * state of the game
      *
@@ -216,8 +218,10 @@ public class Game {
         if(mafiaAlive && citizenAlive) {
             return 3;
         } else if (!citizenAlive) {
+            System.out.println("Mafia Win!");
             return 2;
         } else {
+            System.out.println("Citizens Win!");
             return 1;
         }
     }
