@@ -1,0 +1,28 @@
+
+*{
+    box-sizing: border-box;
+}
+body{
+    background-color: black;
+    text-align: center;
+}
+h1 {
+    display: block;
+    padding: 150px;
+    text-align: center;
+    color: rgb(168, 9, 9);
+    font-family: Monsopace;
+    font-size: 60px;
+    margin-bottom: -120px;
+    width: 100%;
+    height: auto;
+}
+.name {
+    width:200px;
+    padding:10px;
+    border: 0;
+    border-radius: 20px;
+    margin: auto;
+    box-shadow: inset;
+}
+
