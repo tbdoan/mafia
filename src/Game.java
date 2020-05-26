@@ -57,8 +57,7 @@ public class Game {
 
             if(target == null) {
                 System.out.println("The mafia has did not kill last night");
-            }
-            if(target.equals(patient)) {
+            } else if(target.equals(patient)) {
                 System.out.println("The mafia tried to kill " + target.getName()
                         + " but they were saved.");
             } else {
